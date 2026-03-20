@@ -8,4 +8,4 @@ A personal networks notebook.
 * ### [Git](https://github.com/porla113/my-networks-notebook/blob/main/Tools/Git/Git.md)
 * ### VS Code
 * ### Wireshark
-* ### GNS3
+* ### [GNS3](https://github.com/porla113/my-networks-notebook/blob/main/Tools/GNS3/GNS3.md)
