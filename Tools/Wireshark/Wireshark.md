@@ -53,7 +53,7 @@ The default is Default profile. It is at the bottom right of the window. Click t
 - Go to View > Coloring Rules
 - They are stacking rules. If a packet matches more than one rule, the top filter is the one that applies.
 - We can add or delete rule by clicking + / -
-- Remove the “TCP SYN/FIN” rule and add a new rule, “TCP-SYN” (conversation start). The filter is tcp.flags.syn == 1. Change the background color to bright green.
+- Remove the “TCP SYN/FIN” rule and add a new rule, “TCP-SYN” (conversation start). The filter is `tcp.flags.syn == 1`. Change the background color to bright green.
 - Move it down below “ICMP errors”. Click OK.
-- Add another rule, “TCP-FIN” (conversation stop). The filter is tcp.flags.fin == 1. Change the background color to bright blue and move it below the TCP-SYN rule. Click OK.
+- Add another rule, “TCP-FIN” (conversation stop). The filter is `tcp.flags.fin == 1`. Change the background color to bright blue and move it below the TCP-SYN rule. Click OK.
 - They will be standout especially when looking in the mini scroll bar.
