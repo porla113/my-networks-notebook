@@ -1,7 +1,7 @@
 # my-networks-notebook
 A personal networks notebook.
 ## Networks
-* ### CCNA
+* ### [CCNA](https://github.com/porla113/my-networks-notebook/blob/main/Networks/CCNA/CCNA.md)
 * ### AWS
 * ### Troubleshooting
 ## Tools
