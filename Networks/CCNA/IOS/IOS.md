@@ -2,6 +2,8 @@
 * [Switch Setup](#switch-setup)
 * [Switch Password Setup](#switch-password-setup)
 * [Switch VLAN Setup](#switch-vlan-setup)
+* [Switch Trunk Setup](#switch-trunk-setup)
+* [Router Trunk Setup](#router-trunk-setup)
 
 ## Switch Setup
 
@@ -50,3 +52,31 @@
 |`S1(config)# no vlan 20`|Remove VLAN 20.|
 |`S1(config)# end`|Exit to Privileged EXEC mode.|
 |`S1# show vlan brief`|Show VLAN.|
+
+## Switch Trunk Setup
+
+|Command|Description|
+|---|---|
+|`S1> enable`|Enter Privileged EXEC mode.|
+|`S1# configure terminal`|Enter Global Config mode.|
+|`S1(config)# interface g0/1`|Enter interface conf. mode.|
+|`S1(config-if)# switchport mode trunk`|Enable trunk mode.|
+|`S1(config-if)# switchport trunk native vlan 99`|Set trunk native to VLAN 99.|
+|`S1(config-if)# switchport trunk allowed vlan 10,20,99`|Set trunk to allow VLAN 10, 20, 99.|
+|`S1(config-if)# no shutdown`|Enable the interface.|
+|`S1(config-if)# exit`|Exit interface conf. mode.|
+
+## Router Trunk Setup
+
+|Command|Description|
+|---|---|
+|`R1> enable`|Enter Privileged EXEC mode.|
+|`R1# configure terminal`|Enter Global Config mode.|
+|`R1(config)# interface g0/0.10`|Enter and create subinterface conf. mode.|
+|`R1(config-subif)# description Default Gateway for VLAN 10`|Create a description for the subinterface.|
+|`R1(config-subif)# encapsulation dot1q 10`|Set encapsulation type.|
+|`R1(config-subif)# ip address 192.168.10.1 255.255.255.0`|Set IPv4 address.|
+|`R1(config)# interface g0/0`|Enter interface conf. mode.|
+|`R1(config-if)# description Trunk link to Sw-A`|Create a description.|
+|`R1(config-if)# no shutdown`|Enable the interface.|
+|`R1(config-if)# end`|Exit to Privileged EXEC mode.|
