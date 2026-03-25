@@ -14,6 +14,10 @@
   * [Special filters](#special-filters)
   * [Creating a filter](#creating-a-filter)
   * [Filter examples](#filter-examples)
+* ### [Capturing Packet](#capturing-packet-1)
+  * [Before capturing](#before-capturing)
+  * [Capturing packets](#capturing-packets)
+  * [Capturing with Wireshark interface](#capturing-with-wireshark-interface)
 
 ## Configuring
 
@@ -144,3 +148,65 @@ The default is Default profile. It is at the bottom right of the window. Click t
 - `tcp contains “google”` - A filter to show every TCP packet that has a “google” in it (info).
 - `frame contains “google”` - A filter to show every packet (regardless of protocol) that has a “google” in it (info).
 - To set up TCP conversation filter, right click on the interested packet > Conversation Filter > TCP
+
+## Capturing Packet
+(25.03.2026)
+
+### Before capturing
+(25.03.2026)
+- Plan before capturing. Don’t run into a data center and grab a ton of traffic.
+- Some questions to think about the problem:
+  - Who is being impacted?
+  - Does the problem ever go away?
+  - Can it be reproduced on demand?
+- Some questions to think about capturing the problem:
+  - What capture methods do we have at our disposal?
+  - Can we capture the client side?
+  - Can we capture the server side?
+  - Can we capture somewhere in the middle?
+  - Can we capture all three?
+- Some questions to think about capturing method:
+  - What type of capture equipment do we have?
+  - Do we just have a laptop?
+  - Do we have some stronger capture gear?
+  - Do we have some real hardware?
+
+### Capturing packets
+(25.03.2026)
+- There are several ways to capture packets:
+  - Install a tap.
+    - Have a cost.
+  - Configure SPAN (Switch Port Analyzer) or port mirroring on the switch.
+    - Tell the switch to send a copy of traffic on the specific ports to the SPAN port.
+    - It is free, just have to configure.
+    - If over-provision these ports, more traffic will be sent to the port than it can handle.
+  - Install Wireshark on the client side endpoint.
+    - It is free, quick, and dirty.
+    - Might not fully see how that traffic looks on the wire.
+  - Use capability built in of network infrastructure devices (router, firewall, or loadbalancer).
+    - It is a feature that we can use. 
+    - It is free, quick.
+    - We are putting another load on top of already busy devices.
+    - These devices do not have very large buffers.
+  - Use available features of cloud services.
+    - Depends on the support package.
+    - Check what kind of cloud-based capture we have.
+  - Install Wireshark on the server side endpoint.
+    - We are putting another load on the server.
+- The best case would be able to capture on the client side and the server side at the same time.
+- If possible try to capture the traffic from more than one vantage point.
+- If we can only get one vantage point, then that is all we got.
+- Should we use a capture filter?
+  - If we capture on the client side, we might not. Capture everything, filter later.
+  - If we capture on the server side and we want to capture just packets from a specific client, we might need to. Because the server gets traffic from many clients. (Warning!!! We will miss conversations between the server and the backend system.)
+
+### Capturing with Wireshark interface
+(25.03.2026)
+- Open Wireshark, and double click the interface you want to capture.
+- Wireshark is going to keep capturing packets until we press the stop button or the hard drive is full or the system crashes.
+- We can configure how Wireshark saves packets to disk.
+  - Go to Capture Options > Output > Browse… (location to save the file)
+  - Set Output format to “pcapng” (new version, new features i.e. comments)
+  - Check “Create a new file automatically”. Check an option (after 100 megabytes for example).
+  - Check Use a ring buffer with 20 files.
+- When the problem strikes, press stop and note down the time. Analyze the packet capture that was running at the time and also the one or two before it.
