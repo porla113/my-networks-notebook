@@ -9,3 +9,4 @@ A personal networks notebook.
 * ### VS Code
 * ### [Wireshark](https://github.com/porla113/my-networks-notebook/blob/main/Tools/Wireshark/Wireshark.md)
 * ### [GNS3](https://github.com/porla113/my-networks-notebook/blob/main/Tools/GNS3/GNS3.md)
+* ### [VMware](https://github.com/porla113/my-networks-notebook/blob/main/Tools/VMware/VMware.md)
