@@ -9,6 +9,7 @@
 
 |Command|Description|
 |---|---|
+|`git config --list`|List config.|
 |`git config --global user.name "John Doe"`|Set user name.|
 |`git config --global user.email "johndoe@example.com"`|Set email, must match with Github account.|
 |`git config --global init.defaultBranch main`|Set the default branch to main.|
