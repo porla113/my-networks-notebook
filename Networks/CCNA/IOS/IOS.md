@@ -15,6 +15,13 @@
 |`S1(config)# exit`|Exit the current mode.|
 |`S1(config)# end`|Exit to Privileged EXEC mode.|
 
+## Switch Clock Setup
+|Command|Description|
+|---|---|
+|`S1> enable`|Enter Privileged EXEC mode.|
+|`S1# clock set 10:40:00 1 April 2026`|Enter hh:mm:ss d m y.|
+|`S1# show clock`|To verify.|
+
 ## Switch Password Setup
 
 |Command|Description|
@@ -66,7 +73,32 @@
 |`S1(config-if)# no shutdown`|Enable the interface.|
 |`S1(config-if)# exit`|Exit interface conf. mode.|
 
-## Router Trunk Setup
+## Router Interface Setup
+|Command|Description|
+|---|---|
+|`R1> enable`|Enter Privileged EXEC mode.|
+|`R1# configure terminal`|Enter Global Config mode.|
+|`R1(config)# interface g0/0`|Enter interface conf. mode.|
+|`R1(config-if)# description Trunk link to Sw-A`|Create a description.|
+|`R1(config-if)# ip address 10.0.0.1 255.255.255.0`|Configure IP address.|
+|`R1(config-if)# no shutdown`|Enable the interface.|
+|`R1(config-if)# interface g0/1`|Able to go to the next interface without exit.|
+|`R1(config-if)# end`|Exit to Privileged EXEC mode.|
+|`R1# show ip route`|To verify routing table.|
+|`R1# show ip interface brief`|To verify interfaces.|
+
+## Router Static Routes Setup
+|Command|Description|
+|---|---|
+|`R1# configure terminal`|Enter Global Config mode.|
+|`R1(config)# ip route 10.0.0.0 255.255.255.0 10.1.0.2`|`ip route [netw] [netw_subnet_mask] [interface]`|
+
+## Router Default Route Setup
+|Command|Description|
+|---|---|
+|`R1(config)# ip route 0.0.0.0 0.0.0.0 [next-hop-ip]`|Act as a gateway of last resort. A catch-all path for packets with dest. addr. that are not listed in the routing table.|
+
+## Router Inter-VLAN Setup
 
 |Command|Description|
 |---|---|
@@ -76,7 +108,4 @@
 |`R1(config-subif)# description Default Gateway for VLAN 10`|Create a description for the subinterface.|
 |`R1(config-subif)# encapsulation dot1q 10`|Set encapsulation type.|
 |`R1(config-subif)# ip address 192.168.10.1 255.255.255.0`|Set IPv4 address.|
-|`R1(config)# interface g0/0`|Enter interface conf. mode.|
-|`R1(config-if)# description Trunk link to Sw-A`|Create a description.|
-|`R1(config-if)# no shutdown`|Enable the interface.|
-|`R1(config-if)# end`|Exit to Privileged EXEC mode.|
+|`R1(config-subif)# encapsulation dot1q 999 native`|Set subinterface for Native VLAN.|
