@@ -1,0 +1,68 @@
+# Dynamic Routing Protocols
+- When routing protocol is used, routers automatically advertise their best paths to known networks to each other.
+- Routers use this information to determine their own best path to the known destinations.
+- When the state of the network changes (links go down or subnets being added), the routers update each other.
+- Routers will automatically calculate a new best path and update the routing table if the network changes.
+## Dynamic routing protocols vs static routes
+- Routing protocols are more scalable.
+- Using static routes is for small environments.
+- However, using both is common in real world environments.
+  - The routing protocol will be used to carry the bulk of the network information.
+  - The static routes can be used for backup purposes or a static route to the internet
+## Dynamic routing protocols overview
+- **Dynamic Routing Protocols**
+  - **IGPs** (Interior Gateway Protocols)
+    - **Distance Vector Routing Protocols**
+      - **RIP** (Routing Information Protocol)
+      - **EIGRP** (Enhanced Interior Gateway Routing Protocol)
+    - **Link State Routing Protocols**
+      - **OSPF** (Open Shortest Path First)
+      - **IS-IS** (Intermediate System - Intermediate System)
+  - **EGPs** (Exterior Gateway Protocols)
+    - **BGP** (Border Gateway Protocol)
+- **IGPs** are used for routing within an organization.
+- **EGPs** are used for routing between organizations over the Internet.
+- The only **EGP** in use today is **BGP**
+- **Distance Vector protocols**
+  - They do not advertise the entire network topology.
+  - A router only knows its directly connected neighbours and the lists of networks those neighbors have advertised. It does not have detailed topology information beyond its directly connected neighbors.
+  - They are often called **'Routing by rumour'**.
+- **Link State routing protocols**
+  - Each router describes itself and its interfaces to its directly connected neighbors.
+  - The information is passed unchanged from one router to another.
+  - Every router learns the full picture of the network including every router, its interfaces and what they connect to.
+- You can have a multiple routing protocols running on the same router, but it is **not recommended**. 
+  - Check with `show ip protocols` / `sh run | section rip` / `sh run | begin rip`
+  - `sh ip rip database` / `sh ip route`
+- **Metric**
+  - A router may receive multiple possible paths to a destination network.
+  - Only the best path will be put into the routing table and used.
+  - The different IGPs use different methods to calculate the best path.
+  - The lowest metric is preferred ("cost", cheaper is better).
+  - If the best path to a destination is lost, it will be removed from the routing table and replaced with the next best route.
+  - **RIP**
+    - Uses "Hop Count" as the metric.
+    - The maximum hop count by default is 15. Paths with more than 15 hops are marked as unreachable.
+    - It does not take bandwidth into account. For example RIP will preferred the second path.
+      - R4 > R3 > R2 > R1 (100 Mbps FastEthernet links)
+      - R4 > R5 > R1 (10 Mbps Ethernet links)
+    - RIP is typically used only in small or test environments.
+  - **IS-IS**
+    - Uses "Cost" as the metric, but it is not automatically derived from interface bandwidth. All links have an equal cost by default.
+    - Can manually configure the cost of links to manipulate the path.
+    - If the link costs are not configured will use the lowest hop count instead.
+    - It is typically used in Service Provider networks or large organizations with their own MPLS network because of its scalability.
+  - **OSPF**
+    - Uses "Cost" as the metric.
+    - It takes bandwidth into account.
+    - Can manually configure the cost of links to manipulate the path.
+    - It is the most commonly deployed IGP today.
+    - It is an open standard and supported by all vendor's routers.
+    - It is complicated to maintain.
+  - **EIGRP**
+    - Uses the bandwidth and delay of links to calculate the metric.
+    - Load and reliability can also be considered but are ignored by default.
+    - Can manually configure the delay on links to manipulate the path.
+    - It started as Cisco proprietary but is now an open standard.
+    - It is only supported on Cisco routers.
+    - It is easy to maintain.
