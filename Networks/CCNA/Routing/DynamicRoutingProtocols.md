@@ -7,6 +7,7 @@
 - [Floating Static Routes](#floating-static-routes)
 - [Loopback Interfaces](#loopback-interfaces)
 - [Adjacencies](#adjacencies)
+- [Route Precedence](#route-precedence)
 
 ## Overview
 - Dynamic routing protocols vs static routes
@@ -121,7 +122,7 @@
 - They are logical interfaces.
 - They allow you to assign an IP address to a router or L3 switch, which is not tied to a physical interface. 
 - They are usually assigned a /32 subnet mask to avoid wasting IP addresss.
-- Loopback interfaces never go down.
+- Loopback interfaces is enable by default and it never goes down.
 - It is best practice to assign a loopback interface to your routers or L3 switches.
 - It is commonly used for traffic that terminates on the router itself i.e. management traffic, Voice over IP, BGP peering etc.
 - This provide redundancy if there are multiple paths to the router.
@@ -131,10 +132,10 @@
   - `R1# conf t`
   - `R1(config)# interface loopback 0`
   - `R1(config-if)# ip address 192.168.1.1 255.255.255.255`
-  - It is on by default, no need to `no shut`.
+  - No need to enable with `no shut`.
   - Add to EIGRP
   - `R1(config-if)# router eigrp 100`
-  - `R1(config-router)# network 192.168.1.1 0.0.0.0` <- wildcard mask inverse of subnet mask
+  - `R1(config-router)# network 192.168.1.1 0.0.0.0` <- wildcard mask (inverse of subnet mask)
 
 ## Adjacencies
 - How routers establish neighbor adjacencies.
@@ -155,3 +156,43 @@
   - Passive interfaces are used on:
     - Loopback interfaces.
     - Physical interfaces where the device on the other side belongs to another organization. Or we do not want to send routing information out but we do want our internal devices to know about the link.
+
+## Route Precedence
+- The best route for a packet decision is based on:
+  - Longest prefix (most specific)
+  - AD (Administrative Distance)
+  - Metric
+- An example these routes are for the exact same network and prefix:
+  - 192.168.0.0/24 via EIGRP from R2 <- the best route, lowest AD
+  - 192.168.0.0/24 via OSPF from R3
+  - Criteria for which is the best route:
+    - AD, the lower the better. If there is a tie.
+    - Metric, the lower the better.
+    - If there are multiple routes with the same AD and Metric, they will all enter the routing table and the router will perform Equal Cost Load Balancing over them.    
+- Another example.
+  - 10.0.0.0/24 via RIP (AD 120) from R2, Metric 5
+  - 10.0.0.0/24 via OSPF (AD 110) from R3, Metric 2
+  - 10.0.0.0/24 via EIGRP (AD 90) from R4, Metric 3072 <- the best route, lowest Metric
+  - 10.0.0.0/24 via EIGRP (AD 90) from R5, Metric 6144
+- Another example.
+  - 192.168.0.0/30 as a Connected Route (AD 0) on interface G0/4
+  - 192.168.0.0/24 via RIP (AD 120) from R2, Metric 1
+  - 192.168.0.0/16 via OSPF (AD 110) from R3, Metric 11
+  - 192.168.0.0/26 via EIGRP (AD 90) from R4, Metric 3072
+  - 192.168.0.0/28 via EIGRP (AD 90) from R4, Metric 3072
+  - They all go into the routing table because they are different routes going to different destinations (different prefix).
+  - They overlap but they are different routes.
+    - 192.168.0.0/30 > 192.168.0.1 - 192.168.0.3
+    - 192.168.0.0/28 > 192.168.0.1 - 192.168.0.15
+    - 192.168.0.0/26 > 192.168.0.1 - 192.168.0.63
+    - 192.168.0.0/24 > 192.168.0.1 - 192.168.0.255
+    - 192.168.0.0/16 > 192.168.0.1 - 192.168.255.255
+  - If a packet with destination address 192.168.0.2 matches these routes, the longest prefix route will be selected.
+    - 192.168.0.0/30 as a Connected Route (AD 0) on interface G0/4 <- the best route, the longest prefix
+    - 192.168.0.0/24 via RIP (AD 120) from R2, Metric 1
+    - 192.168.0.0/16 via OSPF (AD 110) from R3, Metric 11
+    - 192.168.0.0/26 via EIGRP (AD 90) from R4, Metric 3072
+    - 192.168.0.0/28 via EIGRP (AD 90) from R4, Metric 3072
+  - If a packet with destination address 192.168.0.120 matches these routes, the longest prefix route will be selected.
+    - 192.168.0.0/24 via RIP (AD 120) from R2, Metric 1 <- the best route, the longest prefix
+    - 192.168.0.0/16 via OSPF (AD 110) from R3, Metric 11
