@@ -196,3 +196,5 @@
   - If a packet with destination address 192.168.0.120 matches these routes, the longest prefix route will be selected.
     - 192.168.0.0/24 via RIP (AD 120) from R2, Metric 1 <- the best route, the longest prefix
     - 192.168.0.0/16 via OSPF (AD 110) from R3, Metric 11
+- This command will show the best route to the IP address.
+  - `R1# show ip route 192.168.1.5`
